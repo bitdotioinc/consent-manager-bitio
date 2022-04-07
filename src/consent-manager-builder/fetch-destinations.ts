@@ -1,8 +1,6 @@
 import fetch from 'isomorphic-fetch'
-import flatten from 'lodash/flatten'
-import sortedUniqBy from 'lodash/sortedUniqBy'
-import sortBy from 'lodash/sortBy'
 import { Destination } from '../types'
+import _ from 'lodash'
 
 async function fetchDestinationForWriteKey(
   cdnHost: string,
@@ -36,10 +34,10 @@ export default async function fetchDestinations(
     destinationsRequests.push(fetchDestinationForWriteKey(cdnHost, writeKey))
   }
 
-  let destinations = flatten(await Promise.all(destinationsRequests))
+  let destinations = _.flatten(await Promise.all(destinationsRequests))
   // Remove the dummy Repeater destination
   destinations = destinations.filter(d => d.id !== 'Repeater')
-  destinations = sortBy(destinations, ['id'])
-  destinations = sortedUniqBy(destinations, 'id')
+  destinations = _.sortBy(destinations, ['id'])
+  destinations = _.sortedUniqBy(destinations, 'id')
   return destinations
 }
